@@ -7,8 +7,6 @@ include(FetchContent)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#find_package(Corrosion)
-
 FetchContent_Declare(
     Corrosion
     GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
@@ -17,7 +15,7 @@ FetchContent_Declare(
     GIT_TAG v0.6.1
 )
 
-set(Rust_TOOLCHAIN "1.95.0-x86_64-unknown-linux-gnu")
+set(Rust_TOOLCHAIN "stable-x86_64-unknown-linux-gnu" CACHE STRING "Rust toolchain used by Corrosion")
 # Set any global configuration variables such as `Rust_TOOLCHAIN` before this line!
 FetchContent_MakeAvailable(Corrosion)
 
@@ -45,7 +43,7 @@ enable_testing()
 FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-  INSTALL_COMMAND "" # Disable install for googletest
+  EXCLUDE_FROM_ALL
 )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)

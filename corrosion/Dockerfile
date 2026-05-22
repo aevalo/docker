@@ -1,5 +1,8 @@
 # BASE_IMAGE can be specified with podman/docker build --build-arg BASE_IMAGE=image:tag.
 ARG BASE_IMAGE=ubuntu:24.04
+# RUST_TOOLCHAIN can be specified with podman/docker build --build-arg RUST_TOOLCHAIN=toolchain.
+#ARG RUST_TOOLCHAIN="1.95.0-x86_64-unknown-linux-gnu" - unsure why this version does not work
+ARG RUST_TOOLCHAIN
 
 # Stage 1: Build Environment
 FROM ${BASE_IMAGE} AS build-stage
@@ -19,7 +22,7 @@ RUN apt update && apt upgrade --yes --autoremove && \
 WORKDIR /workspace/rust2cpp
 
 # Configure the project
-RUN cmake -B build
+RUN cmake -B build -DRust_TOOLCHAIN=${RUST_TOOLCHAIN:-1.95.0-x86_64-unknown-linux-gnu}
 
 # Compile the project
 RUN cmake --build build

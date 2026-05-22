@@ -125,3 +125,4 @@ target
 # Project specific stuff
 build/
 target/
+rust2cpp-bin/
