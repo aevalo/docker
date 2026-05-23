@@ -11,3 +11,6 @@ cbindgen = "0.29.2"
 
 [lib]
 crate-type=["staticlib", "cdylib"]
+
+[profile.release]
+strip = true

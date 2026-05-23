@@ -20,18 +20,17 @@ RUN apt update && apt upgrade --yes --autoremove && \
     rustup install 1.95.0 --no-self-update
 
 WORKDIR /workspace/rust2cpp
-
-# Configure the project
-RUN cmake -B build -DRust_TOOLCHAIN=${RUST_TOOLCHAIN:-1.95.0-x86_64-unknown-linux-gnu}
+# Configure the project in Release mode
+RUN cmake -B build -DRust_TOOLCHAIN=${RUST_TOOLCHAIN:-1.95.0-x86_64-unknown-linux-gnu} -DCMAKE_BUILD_TYPE=Release
 
 # Compile the project
 RUN cmake --build build
 
 # Test the project
-RUN ctest --test-dir build && cd rust && cargo test && cd ..
+RUN cd rust && cargo test && cd .. && ctest --test-dir build
 
-# Install project
-RUN cmake --install build --prefix rust2cpp-bin
+# Install the release build and strip debuginfo
+RUN cmake --install build --prefix rust2cpp-bin --strip
 
 # Stage 2: Runtime environment
 FROM ${BASE_IMAGE} AS final-stage
