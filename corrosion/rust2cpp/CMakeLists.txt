@@ -8,11 +8,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 FetchContent_Declare(
-    Corrosion
-    GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
-    # v0.6 will be updated to point to the latest patch version.
-    # Use v0.6.<patch_version> or the commit hash to prevent such auto updates.
-    GIT_TAG v0.6.1
+  Corrosion
+  URL           https://github.com/corrosion-rs/corrosion/archive/refs/tags/v0.6.1.zip
+  URL_HASH      SHA256=5c1c5c6ab7196fe4466321c14e9698ec2d0a977c89fd9f1639a37fcffdf604f2
+  DOWNLOAD_DIR  "${PROJECT_SOURCE_DIR}/vendor"
+  DOWNLOAD_NAME "corrosion-v0.6.1.zip"
 )
 
 set(Rust_TOOLCHAIN "stable-x86_64-unknown-linux-gnu" CACHE STRING "Rust toolchain used by Corrosion")
@@ -42,7 +42,10 @@ enable_testing()
 
 FetchContent_Declare(
   googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+  URL           https://github.com/google/googletest/archive/refs/tags/v1.17.0.zip
+  URL_HASH      SHA256=40d4ec942217dcc84a9ebe2a68584ada7d4a33a8ee958755763278ea1c5e18ff
+  DOWNLOAD_DIR  "${PROJECT_SOURCE_DIR}/vendor"
+  DOWNLOAD_NAME "googletest-v1.17.0.zip"
   EXCLUDE_FROM_ALL
 )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
