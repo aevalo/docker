@@ -7,7 +7,12 @@ include(FetchContent)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-FetchContent_Declare(
+if (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
+  message(WARNING "CMAKE_BUILD_TYPE not defined, defaulting to Debug")
+  set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
+  FetchContent_Declare(
   Corrosion
   URL           https://github.com/corrosion-rs/corrosion/archive/refs/tags/v0.6.1.zip
   URL_HASH      SHA256=5c1c5c6ab7196fe4466321c14e9698ec2d0a977c89fd9f1639a37fcffdf604f2
@@ -19,7 +24,20 @@ set(Rust_TOOLCHAIN "stable-x86_64-unknown-linux-gnu" CACHE STRING "Rust toolchai
 # Set any global configuration variables such as `Rust_TOOLCHAIN` before this line!
 FetchContent_MakeAvailable(Corrosion)
 
-corrosion_import_crate(MANIFEST_PATH rust/Cargo.toml)
+list(APPEND RELEASE_BUILD_TYPES "Release" "RelWithDebInfo" "MinSizeRel")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+  set(CARGO_PROFILE "dev" CACHE STRING "Cargo profile used by Corrosion")
+elseif (CMAKE_BUILD_TYPE IN_LIST RELEASE_BUILD_TYPES)
+  set(CARGO_PROFILE "release" CACHE STRING "Cargo profile used by Corrosion")
+else()
+  message(WARNING "Unrecognized CMAKE_BUILD_TYPE not defined, defaulting to dev profile for Corrosion")
+  set(CARGO_PROFILE "dev" CACHE STRING "Cargo profile used by Corrosion")
+endif()
+
+corrosion_import_crate(
+  MANIFEST_PATH rust/Cargo.toml
+  PROFILE ${CARGO_PROFILE}
+)
 target_sources(rust_lib INTERFACE
         FILE_SET HEADERS
         BASE_DIRS rust/target/include
