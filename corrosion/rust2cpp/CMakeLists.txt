@@ -12,7 +12,7 @@ if (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-  FetchContent_Declare(
+FetchContent_Declare(
   Corrosion
   URL           https://github.com/corrosion-rs/corrosion/archive/refs/tags/v0.6.1.zip
   URL_HASH      SHA256=5c1c5c6ab7196fe4466321c14e9698ec2d0a977c89fd9f1639a37fcffdf604f2
