@@ -38,20 +38,33 @@ corrosion_import_crate(
   MANIFEST_PATH rust/Cargo.toml
   PROFILE ${CARGO_PROFILE}
 )
+
+# Add a manually written header file which will be exported
 target_sources(rust_lib INTERFACE
         FILE_SET HEADERS
-        BASE_DIRS rust/target/include
+        BASE_DIRS rust/include
         FILES
-        rust/target/include/rust_lib.h
+        rust/include/rust_lib/rust_lib.h
 )
 
 # Rust libraries must be installed using `corrosion_install`.
 corrosion_install(TARGETS rust_lib EXPORT RustLibTarget)
 
+# Installs the main target
+install(
+        EXPORT RustLibTarget
+        NAMESPACE RustLib::
+        DESTINATION lib/cmake/RustLib
+)
+
 add_executable(cpp-exe cpp/main.cpp)
+add_dependencies(cpp-exe rust_lib)
+target_include_directories(cpp-exe PUBLIC rust/include)
 target_link_libraries(cpp-exe PUBLIC rust_lib)
 
 add_executable(cpp-exe-shared cpp/main.cpp)
+add_dependencies(cpp-exe-shared rust_lib-shared)
+target_include_directories(cpp-exe-shared PUBLIC rust/include)
 target_link_libraries(cpp-exe-shared PUBLIC rust_lib-shared)
 
 install(TARGETS cpp-exe cpp-exe-shared)
@@ -71,9 +84,11 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(rust_lib_test cpp/test.cpp)
+target_include_directories(rust_lib_test PUBLIC rust/include)
 target_link_libraries(rust_lib_test PUBLIC rust_lib PRIVATE GTest::gtest_main)
 
 add_executable(rust_lib_test-shared cpp/test.cpp)
+target_include_directories(rust_lib_test-shared PUBLIC rust/include)
 target_link_libraries(rust_lib_test-shared PUBLIC rust_lib-shared PRIVATE GTest::gtest_main)
 
 include(GoogleTest)

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-extern "C" int add(int left, int right);
+#include "rust_lib/rust_lib.h"
 
 // Demonstrate some basic assertions.
 TEST(RustLibTest, AddTest) {

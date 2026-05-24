@@ -1,14 +1,18 @@
-use std::os::raw::c_char;
-use std::os::raw::c_int;
+extern crate stdint;
+
+use std::ffi::c_char;
+use stdint::int32_t;
 
 #[no_mangle]
+/// Print a greeting to given name.
 pub extern "C" fn rust_function(name: *const c_char) {
     let name = unsafe { std::ffi::CStr::from_ptr(name).to_str().unwrap() };
     println!("Hello, {}! I'm Rust!", name);
 }
 
 #[no_mangle]
-pub extern "C" fn add(left: c_int, right: c_int) -> c_int {
+/// Add given parameters together, and return the result.
+pub extern "C" fn add(left: int32_t, right: int32_t) -> int32_t {
     left + right
 }
 

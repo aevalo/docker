@@ -1,7 +1,6 @@
 #include <iostream>
 
-extern "C" void rust_function(char const *name);
-extern "C" int add(int left, int right);
+#include "rust_lib/rust_lib.h"
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -10,5 +9,10 @@ int main(int argc, char **argv) {
         rust_function(argv[1]);
     }
     std::cout << "add(2, 2) = " << add(2, 2) << std::endl;
+    #ifdef NDEBUG
+    printf("Release configuration!\n");
+    #else
+    printf("Debug configuration!\n");
+    #endif
     return 0;
 }

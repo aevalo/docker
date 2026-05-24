@@ -9,6 +9,9 @@ build = "build.rs"
 [build-dependencies]
 cbindgen = "0.29.2"
 
+[dependencies]
+stdint = "1.1.0"
+
 [lib]
 crate-type=["staticlib", "cdylib"]
 
